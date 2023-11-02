@@ -101,13 +101,16 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     db_user = os.getenv('PERSONAL_DATA_DB_USERNAME', 'root')
     db_password = os.getenv('PERSONAL_DATA_DB_PASSWORD', '')
     db_host = os.getenv('PERSONAL_DATA_DB_HOST', 'localhost')
-    db_name = os.getenv('PERSONAL_DATA_DB_NAME')
+    db_name = os.getenv('PERSONAL_DATA_DB_NAME', 'my_db')
 
     # Establish connection to the database
-    conn = mysql.connector.connection.MySQLConnection(
-            host=db_host,
-            user=db_user,
-            password=db_password,
-            database=db_name
-       )
+    try:
+        conn = mysql.connector.connection.MySQLConnection(
+                host=db_host,
+                user=db_user,
+                password=db_password,
+                database=db_name
+                )
+    except mysql.connector.ConnectionError:
+        return None
     return conn
