@@ -38,6 +38,18 @@ import mysql.connector
 # database (pip3 install mysql-connector-python)
 # =====================================================================
 
+# ========================Task4====================================
+# Implement a main function that takes no arguments and returns nothing.
+# The function will obtain a database connection using get_db and retrieve
+# all rows in the users table and display each row under a filtered format:
+# Filtered fields:
+# name
+# email
+# phone
+# ssn
+# password
+# Only your main function should run when the module is executed.
+
 
 # Create a tuple PII_FIELDS constant at the root of the module containing
 PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
@@ -100,16 +112,47 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     try:
         # Obtain database credentials from environment variables
         db_user = os.getenv('PERSONAL_DATA_DB_USERNAME', 'root')
-        db_password = os.getenv('PERSONAL_DATA_DB_PASSWORD', '')
+        db_password = os.getenv('PERSONAL_DATA_DB_PASSWORD', 'Remisql@91')
         db_host = os.getenv('PERSONAL_DATA_DB_HOST', 'localhost')
         db_name = os.getenv('PERSONAL_DATA_DB_NAME', 'my_db')
         # Establish connection to the database
         conn = mysql.connector.connection.MySQLConnection(
-                host=db_host,
-                user=db_user,
-                password=db_password,
-                database=db_name
-                )
+            host=db_host,
+            user=db_user,
+            password=db_password,
+            database=db_name
+        )
         return conn
     except mysql.connector.ConnectionError:
         return None
+
+
+def main():
+    """Main function"""
+    # establish db connection
+    db = get_db()
+    cursor = db.cursor()
+    # create our logging object
+    logger = get_logger()
+    # query db
+    db_fields = "name, email, phone, ssn, password, ip, last_login, user_agent"
+    query = "SELECT {} FROM users".format(db_fields)
+    cursor.execute(query)
+    data = cursor.fetchall()
+    # create the fmt variable needed for our logging.Formatter class
+    fmt = "name={}; email={}; phone={}; ssn={}; password={};" + \
+          "ip={}; last_login={}; user_agent={}"
+    # fill the fmt variable with the data from the db
+    for row in data:
+        fmt = fmt.format(row[0], row[1], row[2], row[3], row[4], row[5],
+                         row[6], row[7])
+        # log the data
+        logger.info(fmt)
+    # close cursor
+    cursor.close()
+    # close
+    db.close()
+
+
+if __name__ == "__main__":
+    main()
