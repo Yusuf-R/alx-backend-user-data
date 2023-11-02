@@ -88,7 +88,7 @@ def get_logger() -> logging.Logger:
     return logger
 
 
-def get_db() -> mysql.connector.connection.MySQLConnection:
+def get_db():
     """
     A function that returns a connector to the database
     Args:
@@ -112,5 +112,6 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
             database=db_name
         )
         return conn
-    except mysql.connector.Error:
+    except mysql.connector.Error as err:
+        print("Error connecting to the database: {}".format(err))
         return None
