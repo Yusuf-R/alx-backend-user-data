@@ -108,10 +108,9 @@ def get_db():
         print(f"Error: {err}")
         return None
 
-
 # Example usage:
-db_connection = get_db()
-if db_connection:
-    print("Connected to the database")
-else:
-    print("Failed to connect to the database")
+# db_connection = get_db()
+# if db_connection:
+#     print("Connected to the database")
+# else:
+#     print("Failed to connect to the database")
