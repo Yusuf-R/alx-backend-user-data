@@ -3,7 +3,8 @@
 import re
 from typing import List
 import logging
-
+import os
+import mysql.connector
 
 # ==========================Task2====================================
 # Implement a get_logger function that takes no arguments and
@@ -17,6 +18,24 @@ import logging
 # can are considered as “important” PIIs or information that you must hide in
 # your logs.
 # Use it to parameterize the formatter.
+# =====================================================================
+
+# =========================Task3====================================
+# Database credentials should NEVER be stored in code or checked into
+# version control. One secure option is to store them as environment
+# variable on the application server.
+# In this task, you will connect to a secure holberton database to read a users
+# table. The database is protected by a username and password that are set
+# as environment variables on the server named
+# PERSONAL_DATA_DB_USERNAME (set the default as “root”),
+# PERSONAL_DATA_DB_PASSWORD (set the default as an empty string)
+# and PERSONAL_DATA_DB_HOST (set the default as “localhost”).
+# The database name is stored in PERSONAL_DATA_DB_NAME.
+# Implement a get_db function that returns a connector to the
+# database (mysql.connector.connection.MySQLConnection object).
+# Use the os module to obtain credentials from the environment
+# Use the module mysql-connector-python to connect to the MySQL
+# database (pip3 install mysql-connector-python)
 # =====================================================================
 
 
@@ -67,3 +86,32 @@ def get_logger() -> logging.Logger:
     handler.setFormatter(RedactingFormatter(PII_FIELDS))
     logger.addHandler(handler)
     return logger
+
+
+def get_db():
+    # Obtain database credentials from environment variables
+    db_username = os.getenv('PERSONAL_DATA_DB_USERNAME', 'root')
+    db_password = os.getenv('PERSONAL_DATA_DB_PASSWORD', '')
+    db_host = os.getenv('PERSONAL_DATA_DB_HOST', 'localhost')
+    db_name = os.getenv('PERSONAL_DATA_DB_NAME')
+
+    # Establish connection to the database
+    try:
+        connection = mysql.connector.connect(
+            host=db_host,
+            user=db_username,
+            password=db_password,
+            database=db_name
+        )
+        return connection
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        return None
+
+
+# Example usage:
+db_connection = get_db()
+if db_connection:
+    print("Connected to the database")
+else:
+    print("Failed to connect to the database")
