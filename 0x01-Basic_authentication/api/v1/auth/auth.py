@@ -28,7 +28,7 @@ class Auth():
     Methods:
     - require_auth(path: str, excluded_paths: List[str]) -> bool:
         Determines whether authentication is required for a given path.
-    - authorization_header(request=None) -> str: 
+    - authorization_header(request=None) -> str:
         Retrieves the authorization header from a request.
 
     Fields:
@@ -39,11 +39,14 @@ class Auth():
         """Determine whether authentication is required for a given path.
 
         Args:
-            path (str): The path for which authentication requirement needs to be determined.
-            excluded_paths (List[str]): The list of paths that are excluded from authentication requirement.
+            path (str): The path for which authentication requirement
+                needs to be determined.
+            excluded_paths (List[str]): The list of paths that are excluded
+                from authentication requirement.
 
         Returns:
-            bool: True if authentication is required for the given path, False otherwise.
+            bool: True if authentication is required for the given path,
+                False otherwise.
         """
         if path is None or excluded_paths is None or excluded_paths == []:
             return True
@@ -69,7 +72,7 @@ class Auth():
             the authorization header.
 
         Returns:
-            str: The authorization header as a string. 
+            str: The authorization header as a string.
             If no request object is provided, returns None.
         """
         return None
