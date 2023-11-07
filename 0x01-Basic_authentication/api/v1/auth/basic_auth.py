@@ -128,3 +128,29 @@ class BasicAuth(Auth):
                     return user_obj
         except Exception:
             return None
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """ Full overload with Basic Authentication"""
+        try:
+            # get the authorization header
+            # auth_header =  basic_auth or auth as it value
+            auth_header = self.authorization_header(request)
+            # since the auth_header is basic_auth
+            # we expect the value to be "Basic <base 64 encoded value>"
+            # we extract this encoded token
+            b64_encoded_token = (
+                self.extract_base64_authorization_header(auth_header))
+            # we decode the token
+            decoded_token = (
+                self.decode_base64_authorization_header(b64_encoded_token))
+            # extract the value contained in this decoded token
+            # Note that, this string was in the form username:password
+            # it was encoded in base64
+            # thus decoding it and extracting it value should reveal
+            # to us the username and password
+            email, pwd = self.extract_user_credentials(decoded_token)
+            # get the object associated with this properties from the DB
+            # thus we search the DB throuh the credenitals
+            return self.user_object_from_credentials(email, pwd)
+        except Exception:
+            return None
