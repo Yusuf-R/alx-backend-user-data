@@ -51,18 +51,17 @@ class Auth():
         if path is None or excluded_paths is None or excluded_paths == []:
             return True
 
-        if path[-1] == '/':
-            path = path[:-1]
-
-        pattern = '|'.join(re.escape(p.rstrip('/')) for p in excluded_paths)
-        pattern = '({})'.format(pattern)
-
-        match = re.search(pattern, path)
-
-        if match:
-            return False
-        else:
-            return True
+        for excluded_path in map(lambda x: x.strip(), excluded_paths):
+            pattern = ''
+            if excluded_path[-1] == '*':
+                pattern = '{}.*'.format(excluded_path[:-1])
+            elif excluded_path[-1] == '/':
+                pattern = '{}/*'.format(excluded_path[:-1])
+            else:
+                pattern = '{}/*'.format(excluded_path)
+            if re.match(pattern, path):
+                return False
+        return True
 
     def authorization_header(self, request=None) -> str:
         """Retrieves the authorization header from a request.
