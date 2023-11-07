@@ -7,7 +7,6 @@ from api.v1.views import app_views
 from flask import Flask, jsonify, abort, request
 from flask_cors import (CORS, cross_origin)
 from os import getenv
-from api.v1.auth.auth import Auth
 
 
 app = Flask(__name__)
@@ -18,7 +17,11 @@ auth = None
 
 # implment an auth instance base on the evn var AUTH-TYPE
 if getenv("AUTH_TYPE") == "auth":
+    from api.v1.auth.auth import Auth
     auth = Auth()
+elif getenv("AUTH_TYPE") == "basic_auth":
+    from api.v1.auth.basic_auth import BasicAuth
+    auth = BasicAuth()
 
 excluded_paths = [
     '/api/v1/status/',
