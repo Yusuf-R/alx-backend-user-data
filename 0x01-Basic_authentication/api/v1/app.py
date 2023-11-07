@@ -14,6 +14,24 @@ app.register_blueprint(app_views)
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
 
+# =========================Task1==============================================
+# Error handler: Unauthorized
+# What the HTTP status code for a request unauthorized? 401 of course!
+# Edit api/v1/app.py:
+
+# Add a new error handler for this status code, the response must be:
+# a JSON: {"error": "Unauthorized"}
+# status code 401
+# you must use jsonify from Flask
+# =============================================================================
+
+@app.errorhandler(401)
+def unauthorized(error) -> str:
+    """ Unauthorized handler
+    """
+    return jsonify({"error": "Unauthorized"}), 401
+
+
 @app.errorhandler(404)
 def not_found(error) -> str:
     """ Not found handler
