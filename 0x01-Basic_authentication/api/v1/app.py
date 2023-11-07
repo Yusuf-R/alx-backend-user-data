@@ -39,7 +39,22 @@ def not_found(error) -> str:
     return jsonify({"error": "Not found"}), 404
 
 
+# ================================Task 2=======================================
+# Edit api/v1/app.py:
+# Add a new error handler for this status code, the response must be:
+# a JSON: {"error": "Forbidden"}
+# status code 403
+# you must use jsonify from Flask
+# =============================================================================
+
+@app.errorhandler(403)
+def forbidden(error) -> str:
+    """ Forbidden handler
+    """
+    return jsonify({"error": "Forbidden"}), 403
+
+
 if __name__ == "__main__":
     host = getenv("API_HOST", "0.0.0.0")
     port = getenv("API_PORT", "5000")
-    app.run(host=host, port=port)
+    app.run(host=host, port=port, debug=True)

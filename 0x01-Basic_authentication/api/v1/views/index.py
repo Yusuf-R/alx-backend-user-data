@@ -42,3 +42,18 @@ def unauthorized() -> str:
     By calling abort(401), the error handler for 401 will be executed.
     """
     abort(401)
+
+
+# ===================================Task2==================================
+# For testing this new error handler,
+# add a new endpoint in api/v1/views/index.py:
+# Route: GET /api/v1/forbidden
+# This endpoint must raise a 403 error by using
+# ==========================================================================
+
+@app_views.route('/forbidden', methods=['GET'], strict_slashes=False)
+def forbidden() -> str:
+    """ GET /api/v1/forbidden
+    This endpoint must raise a 403 error by using
+    """
+    abort(403)
