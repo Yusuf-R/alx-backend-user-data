@@ -77,10 +77,10 @@ class BasicAuth(Auth):
         Extracts user credentials from a decoded base64 authorization header.
         """
         if decoded_base64_authorization_header is None:
-            return None
+            return (None, None)
         if not isinstance(decoded_base64_authorization_header, str):
-            return None
+            return (None, None)
         if ':' not in decoded_base64_authorization_header:
-            return None
-        data = decoded_base64_authorization_header.split(':', 1)
+            return (None, None)
+        data = decoded_base64_authorization_header.split(':', maxsplit=1)
         return (data[0], data[1])
