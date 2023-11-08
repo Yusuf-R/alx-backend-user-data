@@ -41,6 +41,23 @@ class SessionAuth(Auth):
         # return session_id
         return session_id
 
+    def user_id_for_session_id(self, session_id: str = None) -> str:
+        """
+        Retrieve the user ID associated with a given session ID.
+
+        Args:
+            session_id: A string representing the session ID.
+
+        Returns:
+            str: The user ID associated with the given session ID.
+                If the session ID does not exist, None is returned.
+        """
+        if session_id is None or not isinstance(session_id, str):
+            return None
+        if session_id in self.user_id_by_session_id:
+            return self.user_id_by_session_id.get(session_id)
+        return None
+
     # def current_user(self, request=None) -> TypeVar('User'):
     #     """ current_user """
     #     return None
