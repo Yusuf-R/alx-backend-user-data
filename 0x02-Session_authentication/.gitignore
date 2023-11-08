@@ -1,0 +1,5 @@
+pg.py
+__pycache__/
+.env
+.*.*
+.db*.*
