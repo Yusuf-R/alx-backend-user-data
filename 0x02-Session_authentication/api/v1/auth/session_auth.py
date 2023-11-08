@@ -3,8 +3,8 @@
 
 from api.v1.auth.auth import Auth
 # import base64
-# from typing import TypeVar
-# from models.user import User
+from typing import TypeVar
+from models.user import User
 from uuid import uuid4
 
 
@@ -58,7 +58,28 @@ class SessionAuth(Auth):
             return self.user_id_by_session_id.get(session_id)
         return None
 
-    # def current_user(self, request=None) -> TypeVar('User'):
-    #     """ current_user """
-    #     return None
-    pass
+    def current_user(self, request=None) -> TypeVar('User'):
+        """
+        Returns a User instance based on a cookie value.
+
+        Args:
+            request (optional): request object that contains the cookie value.
+
+        Returns:
+            User instance: The User instance associated with the
+            cookie value in the request.
+            If the cookie value is invalid or the user does not exist,
+            None is returned.
+        """
+        if request is None:
+            return None
+        cookie_value = self.session_cookie(request)
+        if cookie_value is None:
+            return None
+        user_id = self.user_id_for_session_id(cookie_value)
+        if user_id is None:
+            return None
+        user_obj = User.get(user_id)
+        if user_obj is None:
+            return None
+        return user_obj
