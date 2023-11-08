@@ -13,11 +13,25 @@ class SessionAuth(Auth):
     """
     # class attribute user_id_by_session_id
     user_id_by_session_id = {}
-    
-    # Create an instance method def create_session(self, user_id: str = None) -> str:
-    # that creates a Session ID for a user_id
+
     def create_session(self, user_id: str = None) -> str:
-        """ create_session """
+        """
+        Create a session for a user by generating a
+        unique session ID using uuid4 and storing it in a dictionary.
+
+        Args:
+            user_id (str, optional): A string representing the user ID.
+
+        Returns:
+            str: A string representing the generated session ID.
+
+        Example Usage:
+            # Initialize the SessionAuth class object
+            session_auth = SessionAuth()
+
+            # Create a session for a user with user ID '123'
+            session_id = session_auth.create_session('123')
+        """
         if user_id is None or not isinstance(user_id, str):
             return None
         # generate a session_id using uuid4
@@ -26,8 +40,7 @@ class SessionAuth(Auth):
         self.user_id_by_session_id[session_id] = user_id
         # return session_id
         return session_id
-        
-    
+
     # def current_user(self, request=None) -> TypeVar('User'):
     #     """ current_user """
     #     return None
