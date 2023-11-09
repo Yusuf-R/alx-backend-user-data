@@ -35,20 +35,21 @@ def login() -> str:
     # synthesize email and password
     email = email.strip()
     password = password.strip()
-    # from the email retrieve the user object
+    # from the email retrieve the list of user object with such email
     try:
-        user_list = User.search({'email': email})
+        user_obj_list = User.search({'email': email})
     except Exception:
         return jsonify({"error": "no user found for this email"}), 404
-    if len(user_list) == 0:
+    if len(user_obj_list) == 0:
         return jsonify({"error": "no user found for this email"}), 404
-    # ensure user object from email matches the password
-    for user in user_list:
-        if user.is_valid_password(password):
+    # from the list of obj, extract the user_obj
+    # that fits the password
+    for user_obj in user_obj_list:
+        if user_obj.is_valid_password(password):
             # create a new session since no session exists
             from api.v1.app import auth
-            session_id = auth.create_session(user.id)
-            response = jsonify(user.to_json())
+            session_id = auth.create_session(user_obj.id)
+            response = jsonify(user_obj.to_json())
             response.set_cookie(getenv('SESSION_NAME'), session_id)
             return response
         else:
@@ -73,4 +74,4 @@ def logout() -> str:
     from api.v1.app import auth
     if auth.destroy_session(request) is False:
         abort(404)
-    return jsonify({})
+    return jsonify({}), 200

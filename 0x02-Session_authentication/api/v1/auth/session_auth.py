@@ -97,11 +97,14 @@ class SessionAuth(Auth):
         """
         if request is None:
             return False
+        # get the cookie value from the request headers
         cookie_value = self.session_cookie(request)
         if cookie_value is None:
             return False
+        # extract the user object id from the cookie value
         user_id = self.user_id_for_session_id(cookie_value)
         if user_id is None:
             return False
+        # if user_id exist, then delete that cookie value for the session
         del self.user_id_by_session_id[cookie_value]
         return True

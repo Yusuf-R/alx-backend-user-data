@@ -27,10 +27,11 @@ class SessionExpAuth(SessionAuth):
         session_id = super().create_session(user_id)
         if session_id is None:
             return None
-        self.user_id_by_session_id[session_id] = {
+        session_dict = {
             'user_id': user_id,
             'created_at': datetime.now(),
         }
+        self.user_id_by_session_id[session_id] = session_dict
         return session_id
 
     def user_id_for_session_id(self, session_id: str = None) -> str:
@@ -47,10 +48,22 @@ class SessionExpAuth(SessionAuth):
             return session_dict['user_id']
         if 'created_at' not in session_dict:
             return None
-        # finding the time delta
-        created_at = datetime.now()
-        duration = timedelta(seconds=self.session_duration)
-        expiration_time = session_dict['created_at'] + duration
-        if expiration_time < created_at:
+        # finding the time delta of the session
+
+        # this will be the record of the querry time
+        current_datetime = datetime.now()
+
+        # get the onject session duration in seconds as timedelta
+        # this will return what ever time in seconds
+        obj_duration_secs = timedelta(seconds=self.session_duration)
+
+        # calculate the available time of the object session
+        # this will be cobinint the time the object was created and the
+        # expiration time value given to the object at instantiation
+        available_time = session_dict['created_at'] + obj_duration_secs
+
+        # we compare if the available time is less than the current time
+        # if it is less, that means it has expired already
+        if available_time < current_datetime:
             return None
         return session_dict['user_id']
