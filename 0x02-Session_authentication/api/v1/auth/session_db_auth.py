@@ -2,7 +2,7 @@
 """ Session Auth Expiration template"""
 
 from api.v1.auth.auth import Auth
-from api.v1.auth.session_auth import SessionAuth
+from api.v1.auth.session_exp_auth import SessionExpAuth
 # import base64
 from typing import TypeVar
 from models.user import User
@@ -11,7 +11,7 @@ from os import getenv
 from datetime import datetime, timedelta
 
 
-class SessionDBAuth(SessionAuth):
+class SessionDBAuth(SessionExpAuth):
     """ Session DB class
     """
 
