@@ -50,12 +50,12 @@ class Auth():
         """
         if path is None or excluded_paths is None or excluded_paths == []:
             return True
-
-        for excluded_path in map(lambda x: x.strip(), excluded_paths):
+        for excluded_path in excluded_paths:
+            excluded_path = excluded_path.strip()
             pattern = ''
-            if excluded_path[-1] == '*':
+            if excluded_path.endswith('*'):
                 pattern = '{}.*'.format(excluded_path[:-1])
-            elif excluded_path[-1] == '/':
+            elif excluded_path.endswith('/'):
                 pattern = '{}/*'.format(excluded_path[:-1])
             else:
                 pattern = '{}/*'.format(excluded_path)
