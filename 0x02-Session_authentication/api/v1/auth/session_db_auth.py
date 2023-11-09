@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """ Session Auth Expiration template"""
 
-from api.v1.auth.auth import Auth
+from models.user_session import UserSession
 from api.v1.auth.session_exp_auth import SessionExpAuth
 # import base64
-from typing import TypeVar
+from typing import TypeVar, Optional
 from models.user import User
 from uuid import uuid4
 from os import getenv
@@ -15,14 +15,47 @@ class SessionDBAuth(SessionExpAuth):
     """ Session DB class
     """
 
-    def create_session(self, user_id: str = None) -> str:
+    def create_session(self, user_id: str = None) -> Optional[str]:
         """ Create a session for a user by generating a"""
-        return super().create_session(user_id)
+        session_id = super().create_session(user_id)
+        if session_id is None:
+            return None
+        kwargs = {
+            "user_id": user_id,
+            "session_id": session_id,
+        }
+        user_session = UserSession(**kwargs)
+        user_session.save()
+        return session_id
 
-    def user_id_for_session_id(self, session_id: str = None) -> str:
+    def user_id_for_session_id(self, session_id: str = None) -> Optional[str]:
         """ Retrieve the user ID associated with a given session ID."""
-        return super().user_id_for_session_id(session_id)
+        try:
+            sessions = UserSession.search({"session_id": session_id})
+        except Exception:
+            return
+
+        if len(sessions) < 1:
+            return
+
+        current_time = datetime.now()
+        duration = timedelta(seconds=self.session_duration)
+        exp_time = sessions[0].created_at + duration
+        if exp_time < current_time:
+            return
+
+        return sessions[0].user_id
 
     def destroy_session(self, request=None) -> bool:
         """ Deletes the user session."""
-        return super().destroy_session(request)
+        session_id = self.session_cookie(request)
+        try:
+            sessions = UserSession.search({"session_id": session_id})
+        except Exception:
+            return False
+
+        if len(sessions) < 1:
+            return False
+
+        sessions[0].remove()
+        return True
