@@ -24,23 +24,33 @@ class SessionDBAuth(SessionExpAuth):
             "user_id": user_id,
             "session_id": session_id,
         }
-        user_session = UserSession(**kwargs)
-        user_session.save()
+        user_session_obj = UserSession(**kwargs)
+        user_session_obj.save()
+        print(user_session_obj.to_json())
+        print("Duration: ", self.session_duration)
         return session_id
 
     def user_id_for_session_id(self, session_id: str = None) -> Optional[str]:
+        # sourcery skip: aware-datetime-for-utc
         """ Retrieve the user ID associated with a given session ID."""
         try:
             sessions = UserSession.search({"session_id": session_id})
         except Exception:
             return
-
+        # check if its an empty list
         if len(sessions) < 1:
             return
 
-        current_time = datetime.now()
-        duration = timedelta(seconds=self.session_duration)
-        exp_time = sessions[0].created_at + duration
+        # get the current time
+        current_time = datetime.utcnow()
+        # get the current time for our session in seconds as passed
+        # in the environmental variable SESSION_TIME
+        obj_duration_secs = timedelta(seconds=self.session_duration)
+        # get the time left for our session object
+        exp_time = sessions[0].created_at + obj_duration_secs
+
+        # check if the time left is less than the current time
+        # if it is return None
         if exp_time < current_time:
             return
 

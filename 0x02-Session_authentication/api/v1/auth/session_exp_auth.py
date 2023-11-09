@@ -20,6 +20,7 @@ class SessionExpAuth(SessionAuth):
         self.session_duration = int(getenv('SESSION_DURATION', 0))
 
     def create_session(self, user_id: str = None) -> str:
+        # sourcery skip: aware-datetime-for-utc
         """
         Create a session for a user by generating a
         unique session ID using uuid4 and storing it in a dictionary.
@@ -29,12 +30,13 @@ class SessionExpAuth(SessionAuth):
             return None
         session_dict = {
             'user_id': user_id,
-            'created_at': datetime.now(),
+            'created_at': datetime.utcnow(),
         }
         self.user_id_by_session_id[session_id] = session_dict
         return session_id
 
     def user_id_for_session_id(self, session_id: str = None) -> str:
+        # sourcery skip: assign-if-exp, aware-datetime-for-utc, reintroduce-else
         """
         Retrieve the user ID associated with a given session ID.
         """
@@ -51,10 +53,10 @@ class SessionExpAuth(SessionAuth):
         # finding the time delta of the session
 
         # this will be the record of the querry time
-        current_datetime = datetime.now()
+        current_datetime = datetime.utcnow()
 
-        # get the onject session duration in seconds as timedelta
-        # this will return what ever time in seconds
+        # get the current time for our session in seconds as passed
+        # in the environmental variable SESSION_TIME
         obj_duration_secs = timedelta(seconds=self.session_duration)
 
         # calculate the available time of the object session
@@ -64,6 +66,8 @@ class SessionExpAuth(SessionAuth):
 
         # we compare if the available time is less than the current time
         # if it is less, that means it has expired already
+
+        # evaluat the time left for our session object
         if available_time < current_datetime:
             return None
         return session_dict['user_id']
