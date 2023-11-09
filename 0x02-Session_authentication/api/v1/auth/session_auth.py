@@ -83,3 +83,25 @@ class SessionAuth(Auth):
         if user_obj is None:
             return None
         return user_obj
+
+    def destroy_session(self, request=None) -> bool:
+        """
+        Deletes the user session.
+
+        Args:
+            request (optional): A request obj that contains the cookie value.
+
+        Returns:
+            bool: True if the session was successfully destroyed,
+            False otherwise.
+        """
+        if request is None:
+            return False
+        cookie_value = self.session_cookie(request)
+        if cookie_value is None:
+            return False
+        user_id = self.user_id_for_session_id(cookie_value)
+        if user_id is None:
+            return False
+        del self.user_id_by_session_id[cookie_value]
+        return True
