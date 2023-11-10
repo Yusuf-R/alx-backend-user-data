@@ -26,8 +26,6 @@ class SessionDBAuth(SessionExpAuth):
         }
         user_session_obj = UserSession(**kwargs)
         user_session_obj.save()
-        print(user_session_obj.to_json())
-        print("Duration: ", self.session_duration)
         return session_id
 
     def user_id_for_session_id(self, session_id: str = None) -> Optional[str]:
