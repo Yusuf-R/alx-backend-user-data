@@ -58,7 +58,6 @@ def delete_user(user_id: str = None) -> str:
 
 @app_views.route('/users', methods=['POST'], strict_slashes=False)
 def create_user() -> str:
-    # sourcery skip: assign-if-exp, introduce-default-else, move-assign-in-block
     """ POST /api/v1/users/
     JSON body:
       - email
