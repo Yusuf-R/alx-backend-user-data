@@ -36,7 +36,6 @@ class SessionExpAuth(SessionAuth):
         return session_id
 
     def user_id_for_session_id(self, session_id: str = None) -> str:
-        # sourcery skip: assign-if-exp, aware-datetime-for-utc, reintroduce-else
         """
         Retrieve the user ID associated with a given session ID.
         """
