@@ -76,10 +76,15 @@ class DB:
         """
         if kwargs is None:
             raise InvalidRequestError
-        result = self._session.query(User).filter_by(**kwargs).first()
-        if result is None:
+        # validate the keys comforms with existing db column
+        columns = User.__table__.columns.keys()
+        for key in kwargs:
+            if key not in columns:
+                raise InvalidRequestError
+        user_obj = self._session.query(User).filter_by(**kwargs).first()
+        if user_obj is None:
             raise NoResultFound
-        return result
+        return user_obj
 
     def update_user(self, user_id: int, **kwargs) -> None:
         """
@@ -93,6 +98,11 @@ class DB:
         # If an argument that does not correspond to a user
         # attribute is passed, raise a ValueError.
         user = self.find_user_by(id=user_id)
+        # validate the keys comforms with existing db column
+        column = User.__table__.columns.keys()
+        for key in kwargs:
+            if key not in column:
+                raise ValueError
         if user is None:
             raise ValueError
         for key, value in kwargs.items():
@@ -102,7 +112,7 @@ class DB:
                 raise ValueError
         self._session.commit()
         return None
-    
+
     def _hash_password(self, password: str) -> str:
         """
         Hash the given password using bcrypt.hashpw.
@@ -118,5 +128,3 @@ class DB:
         # The returned bytes is a salted hash of the input password,
         # hashed with bcrypt.hashpw.
         return bcrypt.hashpw(password.encode(), bcrypt.gensalt())
-    
-    
