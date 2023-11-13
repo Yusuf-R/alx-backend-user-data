@@ -6,5 +6,5 @@ pg.py
 __pycache__/
 .env
 .*.*
-.db*.*
+a.db*.*
 *-main.py
