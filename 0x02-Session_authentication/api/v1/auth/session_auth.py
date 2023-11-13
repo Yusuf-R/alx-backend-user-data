@@ -105,6 +105,7 @@ class SessionAuth(Auth):
         user_id = self.user_id_for_session_id(cookie_value)
         if user_id is None:
             return False
-        # if user_id exist, then delete that cookie value for the session
+        # if user_id exist, then delete that cookie value from the
+        # dictionary for the session
         del self.user_id_by_session_id[cookie_value]
         return True

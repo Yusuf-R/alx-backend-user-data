@@ -93,6 +93,7 @@ def before_request():
         abort(401)
     if auth.current_user(request) is None:
         abort(403)
+    # auth.current_user(request) will return a user_object
     request.current_user = auth.current_user(request)
 
 

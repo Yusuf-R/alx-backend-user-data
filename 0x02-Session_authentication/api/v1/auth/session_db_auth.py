@@ -32,27 +32,28 @@ class SessionDBAuth(SessionExpAuth):
         # sourcery skip: aware-datetime-for-utc
         """ Retrieve the user ID associated with a given session ID."""
         try:
-            sessions = UserSession.search({"session_id": session_id})
+            # it returns a list containng objects at certain addresses
+            sessions_obj_list = UserSession.search({"session_id": session_id})
         except Exception:
             return
         # check if its an empty list
-        if len(sessions) < 1:
+        if len(sessions_obj_list) < 1:
             return
-
+        session_obj = sessions_obj_list[0]
         # get the current time
         current_time = datetime.utcnow()
         # get the current time for our session in seconds as passed
         # in the environmental variable SESSION_TIME
         obj_duration_secs = timedelta(seconds=self.session_duration)
         # get the time left for our session object
-        exp_time = sessions[0].created_at + obj_duration_secs
+        exp_time = session_obj.created_at + obj_duration_secs
 
         # check if the time left is less than the current time
         # if it is return None
         if exp_time < current_time:
             return
 
-        return sessions[0].user_id
+        return session_obj.user_id
 
     def destroy_session(self, request=None) -> bool:
         """ Deletes the user session."""
