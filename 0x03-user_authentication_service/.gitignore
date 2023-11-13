@@ -1,0 +1,9 @@
+# set up gitignore for python project
+
+# create gitignore file
+
+pg.py
+__pycache__/
+.env
+.*.*
+.db*.*
