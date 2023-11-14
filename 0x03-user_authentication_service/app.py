@@ -196,12 +196,16 @@ def update_password():
     reset_token = request.form.get('reset_token')
     new_password = request.form.get('new_password')
     if email is None or reset_token is None or new_password is None:
-        abort(400, 'email, reset_token and new_password are required')
+        abort(403, 'email, reset_token and new_password are required')
     try:
         user = AUTH._db.find_user_by(email=email)
+        if user is None:
+            abort(403, 'user not found')
+        if reset_token != user.reset_token:
+            abort(403, 'invalid reset token')
         AUTH.update_password(reset_token, new_password)
         return jsonify({"email": user.email, "message": "Password updated"}), 200  # noqa E501
-    except ValueError:
+    except Exception:
         abort(403)
 
 
