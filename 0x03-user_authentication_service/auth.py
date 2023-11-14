@@ -17,6 +17,22 @@ class Auth:
         """
         self._db = DB()
 
+    def _hash_password(self, password: str) -> str:
+        """
+        Hash the given password using bcrypt.hashpw.
+
+        Args:
+            password (str): The password to hash.
+
+        Returns:
+            str: The hashed password.
+        """
+        # In this task you will define a _hash_password method
+        # that takes in a password string arguments and returns bytes.
+        # The returned bytes is a salted hash of the input password,
+        # hashed with bcrypt.hashpw.
+        return bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+
     def register_user(self, email: str, password: str) -> User:
         """Register a new user in the authentication database.
 
@@ -36,7 +52,7 @@ class Auth:
             self._db.find_user_by(email=email)
             raise ValueError("User {} already exists".format(email))
         except NoResultFound:
-            return self._db.add_user(email, self._db._hash_password(password))
+            return self._db.add_user(email, self._hash_password(password))
 
     def valid_login(self, email: str, password: str) -> bool:
         """
