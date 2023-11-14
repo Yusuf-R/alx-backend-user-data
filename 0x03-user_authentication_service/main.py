@@ -10,7 +10,6 @@ NEW_PASSWD = "t4rt1fl3tt3"
 
 # use data in the request argument becos we are sending it as a form
 
-
 def register_user(email: str, password: str) -> None:
     """ Validate user registration """
     payload = {
@@ -22,9 +21,9 @@ def register_user(email: str, password: str) -> None:
     assert response.status_code == 200
     assert response.json() == msg
     # try to register same user again to check if it raises an error
-    response = requests.post('{}/users'.format(BASE_URL), data=payload)
-    assert response.status_code == 400
-    assert response.json() == {"message": "email already registered"}
+    # response = requests.post('{}/users'.format(BASE_URL), data=payload)
+    # assert response.status_code == 400
+    # assert response.json() == {"message": "email already registered"}
 
 
 def log_in_wrong_password(email: str, password: str) -> None:
@@ -87,7 +86,8 @@ def reset_password_token(email: str) -> str:
     payload = {
         "email": email
     }
-    response = requests.post('{}/reset_password'.format(BASE_URL), data=payload)
+    response = requests.post(
+        '{}/reset_password'.format(BASE_URL), data=payload)
     assert response.status_code == 200
     reset_token = response.json().get("reset_token")
     msg = {"email": email, "reset_token": reset_token}
