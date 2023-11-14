@@ -10,6 +10,7 @@ NEW_PASSWD = "t4rt1fl3tt3"
 
 # use data in the request argument becos we are sending it as a form
 
+
 def register_user(email: str, password: str) -> None:
     """ Validate user registration """
     payload = {
