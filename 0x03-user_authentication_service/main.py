@@ -22,9 +22,9 @@ def register_user(email: str, password: str) -> None:
     assert response.status_code == 200
     assert response.json() == msg
     # try to register same user again to check if it raises an error
-    # response = requests.post('{}/users'.format(url), data=payload)
-    # assert response.status_code == 400
-    # assert response.json() == {"message": "email already registered"}
+    response = requests.post('{}/users'.format(url), data=payload)
+    assert response.status_code == 400
+    assert response.json() == {"message": "email already registered"}
 
 
 def log_in_wrong_password(email: str, password: str) -> None:
