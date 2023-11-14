@@ -152,7 +152,7 @@ def profile():
 
 
 @app.route('/reset_password', methods=['POST'], strict_slashes=False)
-def reset_password_token():
+def get_reset_password_token():
     """
     Retrieves the email from the request form data and generates
     a reset token for password reset.
