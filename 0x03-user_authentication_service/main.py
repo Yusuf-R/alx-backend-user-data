@@ -8,40 +8,42 @@ EMAIL = "guillaume@holberton.io"
 PASSWD = "b4l0u"
 NEW_PASSWD = "t4rt1fl3tt3"
 
+# use data in the request argument becos we are sending it as a form
+
 
 def register_user(email: str, password: str) -> None:
     """ Validate user registration """
-    data = {
+    payload = {
         "email": email,
         "password": password
     }
-    response = requests.post('{}/users'.format(BASE_URL), data=data)
+    response = requests.post('{}/users'.format(BASE_URL), data=payload)
     msg = {"email": email, "message": "user created"}
     assert response.status_code == 200
     assert response.json() == msg
     # try to register same user again to check if it raises an error
-    response = requests.post('{}/users'.format(BASE_URL), data=data)
+    response = requests.post('{}/users'.format(BASE_URL), data=payload)
     assert response.status_code == 400
     assert response.json() == {"message": "email already registered"}
 
 
 def log_in_wrong_password(email: str, password: str) -> None:
     """ Validate log in with wrong password data """
-    data = {
+    payload = {
         "email": email,
         "password": password
     }
-    response = requests.post('{}/sessions'.format(BASE_URL), data=data)
+    response = requests.post('{}/sessions'.format(BASE_URL), data=payload)
     assert response.status_code == 401
 
 
 def log_in(email: str, password: str) -> str:
     """ Valdate succesful log in with correct credentials """
-    data = {
+    payload = {
         "email": email,
         "password": password
     }
-    response = requests.post('{}/sessions'.format(BASE_URL), data=data)
+    response = requests.post('{}/sessions'.format(BASE_URL), data=payload)
     msg = {"email": email, "message": "logged in"}
     assert response.status_code == 200
     assert response.json() == msg
@@ -82,10 +84,10 @@ def log_out(session_id: str) -> None:
 
 def reset_password_token(email: str) -> str:
     """ Validate password reset token """
-    data = {
+    payload = {
         "email": email
     }
-    response = requests.post('{}/reset_password'.format(BASE_URL), data=data)
+    response = requests.post('{}/reset_password'.format(BASE_URL), data=payload)
     assert response.status_code == 200
     reset_token = response.json().get("reset_token")
     msg = {"email": email, "reset_token": reset_token}
@@ -95,12 +97,12 @@ def reset_password_token(email: str) -> str:
 
 def update_password(email: str, reset_token: str, new_password: str) -> None:
     """ Validate password reset (update) """
-    data = {
+    payload = {
         "email": email,
         "reset_token": reset_token,
         "new_password": new_password
     }
-    response = requests.put('{}/reset_password'.format(BASE_URL), data=data)
+    response = requests.put('{}/reset_password'.format(BASE_URL), data=payload)
     msg = {"email": email, "message": "Password updated"}
     assert response.status_code == 200
     assert response.json() == msg
