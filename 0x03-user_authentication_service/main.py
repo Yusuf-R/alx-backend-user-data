@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-""" End-to-end integration test"""
+""" Inegration test"""
 
 import requests
 
-BASE_URL = 'http://localhost:5000'
+url = 'http://localhost:5000'
 EMAIL = "guillaume@holberton.io"
 PASSWD = "b4l0u"
 NEW_PASSWD = "t4rt1fl3tt3"
@@ -16,12 +16,12 @@ def register_user(email: str, password: str) -> None:
         "email": email,
         "password": password
     }
-    response = requests.post('{}/users'.format(BASE_URL), data=payload)
+    response = requests.post('{}/users'.format(url), data=payload)
     msg = {"email": email, "message": "user created"}
     assert response.status_code == 200
     assert response.json() == msg
     # try to register same user again to check if it raises an error
-    # response = requests.post('{}/users'.format(BASE_URL), data=payload)
+    # response = requests.post('{}/users'.format(url), data=payload)
     # assert response.status_code == 400
     # assert response.json() == {"message": "email already registered"}
 
@@ -32,7 +32,7 @@ def log_in_wrong_password(email: str, password: str) -> None:
         "email": email,
         "password": password
     }
-    response = requests.post('{}/sessions'.format(BASE_URL), data=payload)
+    response = requests.post('{}/sessions'.format(url), data=payload)
     assert response.status_code == 401
 
 
@@ -42,7 +42,7 @@ def log_in(email: str, password: str) -> str:
         "email": email,
         "password": password
     }
-    response = requests.post('{}/sessions'.format(BASE_URL), data=payload)
+    response = requests.post('{}/sessions'.format(url), data=payload)
     msg = {"email": email, "message": "logged in"}
     assert response.status_code == 200
     assert response.json() == msg
@@ -55,7 +55,7 @@ def profile_unlogged() -> None:
     cookies = {
         "session_id": ""
     }
-    response = requests.get('{}/profile'.format(BASE_URL), cookies=cookies)
+    response = requests.get('{}/profile'.format(url), cookies=cookies)
     assert response.status_code == 403
 
 
@@ -64,7 +64,7 @@ def profile_logged(session_id: str) -> None:
     cookies = {
         "session_id": session_id
     }
-    response = requests.get('{}/profile'.format(BASE_URL), cookies=cookies)
+    response = requests.get('{}/profile'.format(url), cookies=cookies)
     msg = {"email": EMAIL}
     assert response.status_code == 200
     assert response.json() == msg
@@ -75,7 +75,7 @@ def log_out(session_id: str) -> None:
     cookies = {
         "session_id": session_id
     }
-    response = requests.delete('{}/sessions'.format(BASE_URL), cookies=cookies)
+    response = requests.delete('{}/sessions'.format(url), cookies=cookies)
     msg = {"message": "Bienvenue"}
     assert response.status_code == 200
     assert response.json() == msg
@@ -87,7 +87,7 @@ def reset_password_token(email: str) -> str:
         "email": email
     }
     response = requests.post(
-        '{}/reset_password'.format(BASE_URL), data=payload)
+        '{}/reset_password'.format(url), data=payload)
     assert response.status_code == 200
     reset_token = response.json().get("reset_token")
     msg = {"email": email, "reset_token": reset_token}
@@ -102,7 +102,7 @@ def update_password(email: str, reset_token: str, new_password: str) -> None:
         "reset_token": reset_token,
         "new_password": new_password
     }
-    response = requests.put('{}/reset_password'.format(BASE_URL), data=payload)
+    response = requests.put('{}/reset_password'.format(url), data=payload)
     msg = {"email": email, "message": "Password updated"}
     assert response.status_code == 200
     assert response.json() == msg
