@@ -141,6 +141,8 @@ def profile():
     Finally, it returns a JSON response containing the user's email with a 200 status code. # noqa: E501
 
     :return: A JSON response containing the user's email with a 200 status code. # noqa: E501
+             - 200 status code: The request was successful
+             - 403 status code: The request was not successful             
     """
     session_id = request.cookies.get('session_id')
     if session_id is None:
@@ -190,17 +192,20 @@ def update_password():
     updates their password using the reset token, and returns a JSON response
     with the user's email and a success message.
 
-    :return: JSON response with the user's email and a success message.
+    :return:  JSON response with the user's email and a success message.
+             - 200  if the password was updated successfully
+             - 400  if any of the required fields are missing
+             - 403  if the user is not found or if the reset token is invalid
     """
     email = request.form.get('email')
     if email is None:
-        abort(403, 'email is required')
+        abort(400, 'email is required')
     reset_token = request.form.get('reset_token')
     if reset_token is None:
-        abort(403, 'reset_token is required')
+        abort(400, 'reset_token is required')
     new_password = request.form.get('new_password')
     if new_password is None:
-        abort(403, 'new_password is required')
+        abort(400, 'new_password is required')
     try:
         user = AUTH._db.find_user_by(email=email)
         if user is None:
