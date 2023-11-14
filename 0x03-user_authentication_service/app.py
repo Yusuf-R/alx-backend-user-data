@@ -168,7 +168,7 @@ def reset_password_token():
     """
     email = request.form.get('email')
     if email is None:
-        abort(400, 'email is required')
+        abort(403, 'email is required')
     try:
         user = AUTH._db.find_user_by(email=email)
         reset_token = AUTH.get_reset_password_token(email)
