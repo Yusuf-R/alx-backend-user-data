@@ -193,10 +193,14 @@ def update_password():
     :return: JSON response with the user's email and a success message.
     """
     email = request.form.get('email')
+    if email is None:
+        abort(403, 'email is required')
     reset_token = request.form.get('reset_token')
+    if reset_token is None:
+        abort(403, 'reset_token is required')
     new_password = request.form.get('new_password')
-    if email is None or reset_token is None or new_password is None:
-        abort(403, 'email, reset_token and new_password are required')
+    if new_password is None:
+        abort(403, 'new_password is required')
     try:
         user = AUTH._db.find_user_by(email=email)
         if user is None:
