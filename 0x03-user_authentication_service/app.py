@@ -173,7 +173,7 @@ def get_reset_password_token():
         user = AUTH._db.find_user_by(email=email)
         reset_token = AUTH.get_reset_password_token(email)
         return jsonify({"email": user.email, "reset_token": reset_token}), 200
-    except ValueError:
+    except Exception:
         abort(403)
 
 
