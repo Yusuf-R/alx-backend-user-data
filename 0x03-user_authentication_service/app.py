@@ -228,8 +228,6 @@ def update_password():
         abort(400)
     try:
         user = AUTH._db.find_user_by(email=email)
-        if user is None:
-            abort(403)
         if reset_token != user.reset_token:
             abort(403)
         AUTH.update_password(reset_token, new_password)
