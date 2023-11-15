@@ -219,6 +219,7 @@ def update_password():
     #     return jsonify({"email": user.email, "message": "Password updated"}), 200  # noqa E501
     # except Exception:
     #     abort(403)
+    # reconstruction
     try:
         email = request.form.get('email')
         reset_token = request.form.get('reset_token')
