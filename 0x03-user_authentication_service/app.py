@@ -220,10 +220,12 @@ def update_password():
     # except Exception:
     #     abort(403)
 
+
     try:
-        email = request.get_json('email')
-        reset_token = request.get_json('reset_token')
-        new_password = request.get_json('new_password')
+        data = request.get_json()
+        email = data.get('email')
+        reset_token = data.get('reset_token')
+        new_password = data.get('new_password')
     except Exception:
         abort(400)
     try:
