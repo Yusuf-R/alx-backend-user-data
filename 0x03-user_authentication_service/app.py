@@ -217,7 +217,7 @@ def update_password():
             abort(403, 'invalid reset token')
         AUTH.update_password(reset_token, new_password)
         return jsonify({"email": user.email, "message": "Password updated"}), 200  # noqa E501
-    except Exception:
+    except ValueError:
         abort(403)
 
 
