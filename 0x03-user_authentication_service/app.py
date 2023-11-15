@@ -221,9 +221,9 @@ def update_password():
     #     abort(403)
 
     try:
-        email = request.form.get('email')
-        reset_token = request.form.get('reset_token')
-        new_password = request.form.get('new_password')
+        email = request.get_json('email')
+        reset_token = request.get_json('reset_token')
+        new_password = request.get_json('new_password')
     except Exception:
         abort(400)
     try:
