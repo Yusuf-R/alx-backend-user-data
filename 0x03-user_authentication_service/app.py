@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from flask import Flask, jsonify, request, abort, redirect
+from sqlalchemy.orm.exc import NoResultFound
 from auth import Auth
 
 app = Flask(__name__)
@@ -227,13 +228,14 @@ def update_password():
         abort(400)
     try:
         user = AUTH._db.find_user_by(email=email)
-        if user is None:
-            abort(403, 'user not found')
-        if reset_token != user.reset_token:
-            abort(403, 'invalid reset token')
+    except NoResultFound:
+        abort(403)
+    if reset_token != user.reset_token:
+        abort(403, 'invalid reset token')
+    try:
         AUTH.update_password(reset_token, new_password)
         return jsonify({"email": email, "message": "Password updated"}), 200
-    except Exception:
+    except NoResultFound:
         abort(403)
 
 
