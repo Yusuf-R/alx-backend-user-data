@@ -197,25 +197,34 @@ def update_password():
              - 400  if any of the required fields are missing
              - 403  if the user is not found or if the reset token is invalid
     """
-    if request is None:
-        abort(400, 'request is required')
-    email = request.form.get('email')
-    if email is None:
-        abort(400, 'email is required')
-    reset_token = request.form.get('reset_token')
-    if reset_token is None:
-        abort(400, 'reset_token is required')
-    new_password = request.form.get('new_password')
-    if new_password is None:
-        abort(400, 'new_password is required')
+    # if request is None:
+    #     abort(400, 'request is required')
+    # email = request.form.get('email')
+    # if email is None:
+    #     abort(400, 'email is required')
+    # reset_token = request.form.get('reset_token')
+    # if reset_token is None:
+    #     abort(400, 'reset_token is required')
+    # new_password = request.form.get('new_password')
+    # if new_password is None:
+    #     abort(400, 'new_password is required')
+    # try:
+    #     user = AUTH._db.find_user_by(email=email)
+    #     if user is None:
+    #         abort(403, 'user not found')
+    #     if reset_token != user.reset_token:
+    #         abort(403, 'invalid reset token')
+    #     AUTH.update_password(reset_token, new_password)
+    #     return jsonify({"email": user.email, "message": "Password updated"}), 200  # noqa E501
+    # except Exception:
+    #     abort(403)
+
     try:
-        user = AUTH._db.find_user_by(email=email)
-        if user is None:
-            abort(403, 'user not found')
-        if reset_token != user.reset_token:
-            abort(403, 'invalid reset token')
+        email = request.form.get('email')
+        reset_token = request.form.get('reset_token')
+        new_password = request.form.get('new_password')
         AUTH.update_password(reset_token, new_password)
-        return jsonify({"email": email, "message": "Password updated"}), 200  # noqa E501
+        return jsonify({"email": email, "message": "Password updated"}), 200
     except Exception:
         abort(403)
 
