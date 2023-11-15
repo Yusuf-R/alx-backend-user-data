@@ -197,6 +197,8 @@ def update_password():
              - 400  if any of the required fields are missing
              - 403  if the user is not found or if the reset token is invalid
     """
+    if request is None:
+        abort(400, 'request is required')
     email = request.form.get('email')
     if email is None:
         abort(400, 'email is required')
