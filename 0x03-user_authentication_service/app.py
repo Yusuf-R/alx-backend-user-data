@@ -183,43 +183,8 @@ def get_reset_password_token():
 @app.route('/reset_password', methods=['PUT'], strict_slashes=False)
 def update_password():
     """
-    Update the password for a user.
-
-    This function is called when the Flask route '/reset_password' is accessed
-    with a PUT request.
-    It retrieves the email, reset token, and new password from the request form. # noqa: E501
-    If any of these values are missing, a 400 error is returned. 
-    Otherwise, it finds the user associated with the email,
-    updates their password using the reset token, and returns a JSON response
-    with the user's email and a success message.
-
-    :return:  JSON response with the user's email and a success message.
-             - 200  if the password was updated successfully
-             - 400  if any of the required fields are missing
-             - 403  if the user is not found or if the reset token is invalid
+    Update the password for a user
     """
-    # if request is None:
-    #     abort(400, 'request is required')
-    # email = request.form.get('email')
-    # if email is None:
-    #     abort(400, 'email is required')
-    # reset_token = request.form.get('reset_token')
-    # if reset_token is None:
-    #     abort(400, 'reset_token is required')
-    # new_password = request.form.get('new_password')
-    # if new_password is None:
-    #     abort(400, 'new_password is required')
-    # try:
-    #     user = AUTH._db.find_user_by(email=email)
-    #     if user is None:
-    #         abort(403, 'user not found')
-    #     if reset_token != user.reset_token:
-    #         abort(403, 'invalid reset token')
-    #     AUTH.update_password(reset_token, new_password)
-    #     return jsonify({"email": user.email, "message": "Password updated"}), 200  # noqa E501
-    # except Exception:
-    #     abort(403)
-    # reconstruction
     try:
         email = request.form.get('email')
         reset_token = request.form.get('reset_token')
