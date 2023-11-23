@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+""" Base template for the app and it's route"""
 
 from flask import Flask, jsonify, request, abort, redirect
 from sqlalchemy.orm.exc import NoResultFound

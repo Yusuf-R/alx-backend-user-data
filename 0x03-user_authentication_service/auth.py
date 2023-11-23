@@ -44,6 +44,7 @@ class Auth:
         self._db = DB()
 
     def register_user(self, email: str, password: str) -> User:
+        # sourcery skip: use-fstring-for-formatting
         """Register a new user in the authentication database.
 
         Args:
